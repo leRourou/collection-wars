@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Card One",
+    "description": "This is the first card.",
+    "type": "COLLECTION"
+  },
+  {
+    "id": 2,
+    "name": "Card Two",
+    "description": "This is the second card.",
+    "type": "COMBO"
+  },
+  {
+    "id": 3,
+    "name": "Card Three",
+    "description": "This is the third card.",
+    "type": "SPECIAL"
+  },
+  {
+    "id": 4,
+    "name": "Card Four",
+    "description": "This is the fourth card.",
+    "type": "COLLECTION"
+  },
+  {
+    "id": 5,
+    "name": "Card Five",
+    "description": "This is the fifth card.",
+    "type": "COMBO"
+  },
+  {
+    "id": 6,
+    "name": "Card Six",
+    "description": "This is the sixth card.",
+    "type": "SPECIAL"
+  },
+  {
+    "id": 7,
+    "name": "Card Seven",
+    "description": "This is the seventh card.",
+    "type": "COLLECTION"
+  },
+  {
+    "id": 8,
+    "name": "Card Eight",
+    "description": "This is the eighth card.",
+    "type": "COMBO"
+  },
+  {
+    "id": 9,
+    "name": "Card Nine",
+    "description": "This is the ninth card.",
+    "type": "SPECIAL"
+  },
+  {
+    "id": 10,
+    "name": "Card Ten",
+    "description": "This is the tenth card.",
+    "type": "COLLECTION"
+  }
+]
