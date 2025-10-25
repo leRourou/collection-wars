@@ -14,11 +14,6 @@ export type GameState = {
 };
 
 export const GameLogic = {
-  /**
-   * Creates the initial game state with shuffled cards and empty players.
-   * @param players List of players participating in the game
-   * @returns Initial game state with shuffled cards and empty players
-   */
   async createInitialState(players: GamePlayer[]): Promise<GameState> {
     const shuffledCards = await getAllCardsShuffled();
     return {

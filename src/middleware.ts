@@ -3,20 +3,13 @@ import type { NextRequest } from "next/server";
 
 /**
  * Middleware Next.js
- *
- * Note: Avec une stratégie de session "database", nous ne pouvons pas vérifier
- * l'authentification dans le middleware (Edge Runtime).
- * La protection des routes se fait au niveau des pages/layouts avec auth()
  */
-export function middleware(request: NextRequest) {
-  // Le middleware peut gérer d'autres logiques (redirections, headers, etc.)
-  // mais pas l'authentification avec database sessions
+export function middleware(_: NextRequest) {
   return NextResponse.next();
 }
 
 /**
- * Matcher configuration pour optimiser les performances
- * Le middleware ne s'exécutera que sur les routes spécifiées
+ * Matcher configuration. Sert pour optimiser les performances.
  */
 export const config = {
   matcher: [

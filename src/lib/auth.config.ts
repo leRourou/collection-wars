@@ -2,9 +2,6 @@ import type { NextAuthConfig } from "next-auth";
 
 /**
  * Configuration Next-auth pour le middleware (Edge Runtime compatible)
- *
- * Ce fichier ne contient QUE la configuration sans les providers qui nécessitent Node.js
- * Il est utilisé par le middleware qui s'exécute sur Edge Runtime
  */
 export const authConfig = {
   pages: {
@@ -39,5 +36,5 @@ export const authConfig = {
       return true;
     },
   },
-  providers: [], // Providers ajoutés dans auth.ts
+  providers: [],
 } satisfies NextAuthConfig;

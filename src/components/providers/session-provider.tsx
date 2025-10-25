@@ -11,10 +11,6 @@ interface SessionProviderProps {
 
 /**
  * Wrapper pour le SessionProvider de Next-auth
- * Permet d'accéder à la session dans tous les Client Components
- *
- * Best practice: Utiliser ce provider au plus haut niveau possible
- * pour minimiser les Client Components boundaries
  */
 export function SessionProvider({ children, session }: SessionProviderProps) {
   return (

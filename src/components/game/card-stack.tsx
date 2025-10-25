@@ -61,7 +61,7 @@ export function CardStack({
             <div
               key={card.id}
               className={cn(
-                "absolute w-64 h-96 rounded-2xl shadow-xl",
+                "absolute w-34 h-52 rounded-sm shadow-xl",
                 "border-2",
                 faceUp
                   ? "bg-gradient-to-br from-white to-gray-50 border-gray-200"
@@ -84,7 +84,7 @@ export function CardStack({
           );
         })}
         <div
-          className="w-64 h-96"
+          className="w-32 h-48"
           style={{ marginTop: `${(maxVisibleCards - 1) * 2}px` }}
         />
       </button>
