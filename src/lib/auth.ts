@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import EmailProvider from "next-auth/providers/nodemailer";
-import { sendMagicLinkEmail } from "@/services/email";
+import { sendMagicLinkEmail } from "@/services/email-service";
 import { authConfig } from "./auth.config";
 
 /**

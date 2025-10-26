@@ -1,7 +1,47 @@
 [
   {
-    "id": 1,
+    "id": "boat_1",
     "type": "boat",
     "color": "yellow"
+  },
+  {
+    "id": "boat_2",
+    "type": "boat",
+    "color": "blue"
+  },
+  {
+    "id": "boat_3",
+    "type": "boat",
+    "color": "blue"
+  },
+  {
+    "id": "boat_4",
+    "type": "boat",
+    "color": "light_blue"
+  },
+  {
+    "id": "boat_5",
+    "type": "boat",
+    "color": "light_blue"
+  },
+  {
+    "id": "boat_6",
+    "type": "boat",
+    "color": "black"
+  },
+  {
+    "id": "boat_7",
+    "type": "boat",
+    "color": "black"
+  },
+  {
+    "id": "boat_8",
+    "type": "boat",
+    "color": "yellow"
+  },
+  {
+    "id": "boat_9",
+    "type": "boat",
+    "color": "light_blue"
   }
 ]

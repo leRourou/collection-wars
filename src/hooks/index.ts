@@ -1,1 +1,1 @@
-export { useCurrentUser, useIsAuthenticated } from "./useCurrentUser";
+export { useCurrentUser, useIsAuthenticated } from "./use-current-user";
