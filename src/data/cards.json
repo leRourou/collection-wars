@@ -38,10 +38,5 @@
     "id": "boat_8",
     "type": "boat",
     "color": "yellow"
-  },
-  {
-    "id": "boat_9",
-    "type": "boat",
-    "color": "light_blue"
   }
 ]

@@ -1,15 +1,16 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import type { GameCard } from "@/types/game-card";
 import Image from "next/image";
 
 interface PlayingCardProps {
-  text: string;
+  card: GameCard;
   isFlipped: boolean;
   selectable?: boolean;
 }
 
-export function PlayingCard({ text, isFlipped, selectable }: PlayingCardProps) {
+export function PlayingCard({ card, isFlipped, selectable }: PlayingCardProps) {
   return (
     <button
       type="button"
@@ -39,8 +40,8 @@ export function PlayingCard({ text, isFlipped, selectable }: PlayingCardProps) {
           )}
         >
           <Image
-            src="/cards/row-5-column-9.webp"
-            alt={text}
+            src={`/cards/${card.id}.webp`}
+            alt={card.id}
             width={128}
             height={176}
             className="w-32 h-50 rounded-xl"

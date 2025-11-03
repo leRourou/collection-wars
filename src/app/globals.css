@@ -132,3 +132,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.card-hand > * {
+  margin-right: -50px;
+}
+
+.card-hand > *:last-child {
+  margin-right: 0;
+}
