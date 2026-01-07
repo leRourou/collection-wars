@@ -1,54 +1,16 @@
 import * as engine from "@/lib/game/game-engine";
-import { calculateScore, hasWinningCondition } from "@/lib/game/scoring";
 import { stateManager } from "@/lib/game/state-manager";
 import { prisma } from "@/lib/prisma";
-import type { GameEndReason, GameState, PlayerId } from "@/types/game";
-import { EndRoundChoice, RoundPhase } from "@/types/game";
+import type { GameEndReason, PlayerId } from "@/types/game";
+import { RoundPhase } from "@/types/game";
 import type { TypedServer, TypedSocket } from "../server";
 
+/**
+ * Match handlers for host-controlled game flow (continue/stop between rounds)
+ * Note: game:end-round is now handled in game.ts to avoid conflicts
+ */
 export function registerMatchHandlers(io: TypedServer, socket: TypedSocket) {
-  socket.on("game:end-round", async ({ choice }) => {
-    try {
-      const room = stateManager.getRoomByPlayer(socket.userId);
-      if (!room) return;
-
-      const state = stateManager.getGameState(room.code);
-      if (!state) return;
-
-      const currentPlayer = state.players[state.currentPlayerIndex];
-      if (currentPlayer.userId !== socket.userId) {
-        socket.emit("game:invalid-action", { message: "Not your turn" });
-        return;
-      }
-
-      if (hasWinningCondition(currentPlayer)) {
-        await handleGameEnd(io, room.code, socket.userId, "immediate_win");
-        return;
-      }
-
-      const currentPoints = calculateScore(currentPlayer);
-      if (currentPoints < 7) {
-        socket.emit("game:invalid-action", {
-          message: "Need at least 7 points",
-        });
-        return;
-      }
-
-      state.roundEnder = socket.userId;
-      state.endChoice = choice;
-
-      if (choice === EndRoundChoice.STOP) {
-        await handleRoundEndStop(io, state);
-      } else {
-        state.lastChancePlayed = [socket.userId];
-        stateManager.updateGameState(room.code, () => state);
-        io.to(room.code).emit("game:state-update", { gameState: state });
-      }
-    } catch (error) {
-      console.error("Error ending round:", error);
-      socket.emit("game:invalid-action", { message: "Failed to end round" });
-    }
-  });
+  // REMOVED: game:end-round handler (now in game.ts to avoid duplicate handlers)
 
   socket.on("round:host-continue", async () => {
     try {
@@ -100,7 +62,8 @@ export function registerMatchHandlers(io: TypedServer, socket: TypedSocket) {
         current.score > prev.score ? current : prev,
       );
 
-      await handleGameEnd(io, room.code, winner.userId, "host_stopped");
+      // Save game result and end game
+      await handleHostStopGameEnd(io, room.code, winner.userId);
     } catch (error) {
       console.error("Error stopping game:", error);
       socket.emit("game:invalid-action", { message: "Failed to stop" });
@@ -108,30 +71,13 @@ export function registerMatchHandlers(io: TypedServer, socket: TypedSocket) {
   });
 }
 
-async function handleRoundEndStop(io: TypedServer, state: GameState) {
-  const scores: Record<string, number> = {};
-
-  for (const player of state.players) {
-    const points = calculateScore(player);
-    player.score += points;
-    scores[player.userId] = points;
-  }
-
-  const winner = state.players.find((p) => p.score >= state.targetScore);
-
-  if (winner) {
-    await handleGameEnd(io, state.roomCode, winner.userId, "score_reached");
-  } else {
-    state.roundNumber++;
-    io.to(state.roomCode).emit("round:ended", { scores, gameState: state });
-  }
-}
-
-async function handleGameEnd(
+/**
+ * Helper function to handle game end when host manually stops the game
+ */
+async function handleHostStopGameEnd(
   io: TypedServer,
   roomCode: string,
   winnerId: PlayerId,
-  reason: GameEndReason,
 ) {
   const state = stateManager.getGameState(roomCode);
   if (!state) return;
@@ -141,24 +87,31 @@ async function handleGameEnd(
     finalScores[player.userId] = player.score;
   }
 
+  // Save game result to database if exactly 2 players
   if (state.players.length === 2) {
-    await prisma.gameResult.create({
-      data: {
-        player1Id: state.players[0].userId,
-        player2Id: state.players[1].userId,
-        winnerId,
-        player1Score: state.players[0].score,
-        player2Score: state.players[1].score,
-        durationSeconds: Math.floor(
-          (Date.now() - (state.startedAt || Date.now())) / 1000,
-        ),
-        reason,
-      },
-    });
+    try {
+      await prisma.gameResult.create({
+        data: {
+          player1Id: state.players[0].userId,
+          player2Id: state.players[1].userId,
+          winnerId,
+          player1Score: state.players[0].score,
+          player2Score: state.players[1].score,
+          durationSeconds: Math.floor(
+            (Date.now() - (state.startedAt || Date.now())) / 1000,
+          ),
+          reason: "host_stopped",
+        },
+      });
+    } catch (error) {
+      console.error("Error saving game result:", error);
+    }
   }
 
+  // Emit game ended event
   io.to(roomCode).emit("game:ended", { winnerId, finalScores });
 
+  // Cleanup: remove all players from room
   for (const player of state.players) {
     stateManager.leaveRoom(player.userId);
   }

@@ -6,7 +6,10 @@ import {
   getDuoEffectType,
 } from "@/lib/game/duo-effects";
 import { calculateRoundScores } from "@/lib/game/round-scoring";
+import { hasWinningCondition } from "@/lib/game/scoring";
 import { stateManager } from "@/lib/game/state-manager";
+import { prisma } from "@/lib/prisma";
+import type { GameEndReason, PlayerId } from "@/types/game";
 import type { TypedServer, TypedSocket } from "../server";
 
 export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
@@ -432,7 +435,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
     }
   });
 
-  socket.on("game:end-round", ({ choice }) => {
+  socket.on("game:end-round", async ({ choice }) => {
     try {
       const room = stateManager.getRoomByPlayer(socket.userId);
       if (!room) return;
@@ -440,6 +443,19 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
       const state = stateManager.getGameState(room.code);
       if (!state) return;
 
+      const currentPlayer = state.players[state.currentPlayerIndex];
+      if (!currentPlayer || currentPlayer.userId !== socket.userId) {
+        socket.emit("game:invalid-action", { message: "Not your turn" });
+        return;
+      }
+
+      // Check for immediate win condition (4 sirens)
+      if (hasWinningCondition(currentPlayer)) {
+        await handleGameEnd(io, room.code, socket.userId, "immediate_win");
+        return;
+      }
+
+      // Check minimum 7 points to end round
       if (!engine.canEndRound(state, socket.userId)) {
         socket.emit("game:invalid-action", {
           message: "Cannot end round - need at least 7 points",
@@ -471,18 +487,28 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
 
         stateManager.updateGameState(room.code, () => updatedState);
 
-        // Emit round ended with detailed scores
-        io.to(room.code).emit("round:ended", {
-          scores: roundResult.playerScores.reduce(
-            (acc, s) => {
-              acc[s.userId] = s.totalPoints;
-              return acc;
-            },
-            {} as Record<string, number>,
-          ),
-          gameState: updatedState,
-          roundResult,
-        });
+        // Check if someone won by reaching target score
+        const winner = updatedState.players.find(
+          (p) => p.score >= updatedState.targetScore,
+        );
+
+        if (winner) {
+          // Game won by score - save to DB and emit game:ended
+          await handleGameEnd(io, room.code, winner.userId, "score_reached");
+        } else {
+          // Round ended but game continues - emit round:ended
+          io.to(room.code).emit("round:ended", {
+            scores: roundResult.playerScores.reduce(
+              (acc, s) => {
+                acc[s.userId] = s.totalPoints;
+                return acc;
+              },
+              {} as Record<string, number>,
+            ),
+            gameState: updatedState,
+            roundResult,
+          });
+        }
       }
     } catch (error) {
       console.error("Error ending round:", error);
@@ -491,4 +517,52 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
       });
     }
   });
+}
+
+/**
+ * Helper function to handle game end (victory)
+ * Saves game result to database and emits game:ended event
+ */
+async function handleGameEnd(
+  io: TypedServer,
+  roomCode: string,
+  winnerId: PlayerId,
+  reason: GameEndReason,
+) {
+  const state = stateManager.getGameState(roomCode);
+  if (!state) return;
+
+  const finalScores: Record<string, number> = {};
+  for (const player of state.players) {
+    finalScores[player.userId] = player.score;
+  }
+
+  // Save game result to database if exactly 2 players
+  if (state.players.length === 2) {
+    try {
+      await prisma.gameResult.create({
+        data: {
+          player1Id: state.players[0].userId,
+          player2Id: state.players[1].userId,
+          winnerId,
+          player1Score: state.players[0].score,
+          player2Score: state.players[1].score,
+          durationSeconds: Math.floor(
+            (Date.now() - (state.startedAt || Date.now())) / 1000,
+          ),
+          reason,
+        },
+      });
+    } catch (error) {
+      console.error("Error saving game result:", error);
+    }
+  }
+
+  // Emit game ended event
+  io.to(roomCode).emit("game:ended", { winnerId, finalScores });
+
+  // Cleanup: remove all players from room
+  for (const player of state.players) {
+    stateManager.leaveRoom(player.userId);
+  }
 }
