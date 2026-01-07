@@ -7,6 +7,7 @@ import { authConfig } from "./auth.config";
 
 /**
  * Configuration Next-auth avec EmailProvider (Node.js Runtime)
+ * Pour le middleware, utiliser auth.edge.ts qui est compatible Edge Runtime
  */
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,

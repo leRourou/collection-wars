@@ -15,12 +15,19 @@ export const authConfig = {
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
       const isOnProfile = nextUrl.pathname.startsWith("/profile");
       const isOnGame = nextUrl.pathname.startsWith("/game");
+      const isOnLobby = nextUrl.pathname.startsWith("/lobby");
       const isOnAuth =
         nextUrl.pathname.startsWith("/login") ||
         nextUrl.pathname.startsWith("/register");
 
+      // IMPORTANT: Toujours autoriser les routes API NextAuth
+      // Le matcher exclut déjà /api/auth, mais on double-check ici
+      if (nextUrl.pathname.startsWith("/api/auth")) {
+        return true;
+      }
+
       // Routes protégées
-      if (isOnDashboard || isOnProfile || isOnGame) {
+      if (isOnDashboard || isOnProfile || isOnGame || isOnLobby) {
         if (isLoggedIn) return true;
         return false; // Rediriger vers login
       }
