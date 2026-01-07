@@ -81,12 +81,17 @@ export function applyFishEffect(state: GameState): DuoEffectResult {
     return { state, success: false };
   }
 
-  const drawnCard = state.deck.pop()!;
-  const currentPlayer = state.players[state.currentPlayerIndex];
-  currentPlayer.hand.push(drawnCard);
+  const newDeck = [...state.deck];
+  const drawnCard = newDeck.pop()!;
+
+  const currentPlayerIndex = state.currentPlayerIndex;
+  const newPlayers = state.players.map((player, idx) => {
+    if (idx !== currentPlayerIndex) return player;
+    return { ...player, hand: [...player.hand, drawnCard] };
+  });
 
   return {
-    state,
+    state: { ...state, deck: newDeck, players: newPlayers },
     success: true,
     metadata: { drawnCard },
   };

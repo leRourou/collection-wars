@@ -97,13 +97,15 @@ export function drawFromDeck(state: GameState): {
     throw new Error("Cannot draw from deck");
   }
 
-  const card1 = state.deck.pop()!;
-  const card2 = state.deck.pop()!;
+  const newDeck = [...state.deck];
+  const card1 = newDeck.pop()!;
+  const card2 = newDeck.pop()!;
   const drawnCards: [GameCard, GameCard] = [card1, card2];
 
   return {
     state: {
       ...state,
+      deck: newDeck,
       roundPhase: RoundPhase.PLAY_DUO,
       drawnCards,
     },
