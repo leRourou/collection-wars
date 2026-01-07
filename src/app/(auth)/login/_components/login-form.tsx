@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const loginSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -60,9 +60,7 @@ export function LoginForm({ onEmailSent }: LoginFormProps) {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>
-          Connexion
-        </CardTitle>
+        <CardTitle>Connexion</CardTitle>
         <CardDescription>
           Connectez-vous avec votre email. Un lien de connexion vous sera
           envoyé.
@@ -71,15 +69,13 @@ export function LoginForm({ onEmailSent }: LoginFormProps) {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           {error && (
-            <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-500/20 border border-red-500/50 text-red-800 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           <div className="grid w-full max-w-sm items-center gap-3">
-            <label htmlFor="email">
-              Adresse email
-            </label>
+            <label htmlFor="email">Adresse email</label>
             <Input
               id="email"
               type="email"
@@ -88,7 +84,7 @@ export function LoginForm({ onEmailSent }: LoginFormProps) {
               placeholder="votre@email.com"
             />
             {errors.email && (
-              <p className="mt-1 text-sm text-red-300">
+              <p className="mt-1 text-sm text-red-800">
                 {errors.email.message}
               </p>
             )}

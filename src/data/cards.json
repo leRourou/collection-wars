@@ -7,12 +7,12 @@
   {
     "id": "boat_2",
     "type": "boat",
-    "color": "blue"
+    "color": "dark_blue"
   },
   {
     "id": "boat_3",
     "type": "boat",
-    "color": "blue"
+    "color": "dark_blue"
   },
   {
     "id": "boat_4",
@@ -38,5 +38,250 @@
     "id": "boat_8",
     "type": "boat",
     "color": "yellow"
+  },
+  {
+    "id": "boat_imp",
+    "type": "boat",
+    "color": "purple"
+  },
+  {
+    "id": "crab_1",
+    "type": "crab",
+    "color": "dark_blue"
+  },
+  {
+    "id": "crab_2",
+    "type": "crab",
+    "color": "dark_blue"
+  },
+  {
+    "id": "crab_3",
+    "type": "crab",
+    "color": "light_blue"
+  },
+  {
+    "id": "crab_4",
+    "type": "crab",
+    "color": "light_blue"
+  },
+  {
+    "id": "crab_5",
+    "type": "crab",
+    "color": "black"
+  },
+  {
+    "id": "crab_6",
+    "type": "crab",
+    "color": "yellow"
+  },
+  {
+    "id": "crab_7",
+    "type": "crab",
+    "color": "yellow"
+  },
+  {
+    "id": "crab_8",
+    "type": "crab",
+    "color": "light_green"
+  },
+  {
+    "id": "crab_9",
+    "type": "crab",
+    "color": "light_gray"
+  },
+  {
+    "id": "fish_1",
+    "type": "fish",
+    "color": "dark_blue"
+  },
+  {
+    "id": "fish_2",
+    "type": "fish",
+    "color": "dark_blue"
+  },
+  {
+    "id": "fish_3",
+    "type": "fish",
+    "color": "light_blue"
+  },
+  {
+    "id": "fish_4",
+    "type": "fish",
+    "color": "black"
+  },
+  {
+    "id": "fish_5",
+    "type": "fish",
+    "color": "black"
+  },
+  {
+    "id": "fish_6",
+    "type": "fish",
+    "color": "yellow"
+  },
+  {
+    "id": "fish_7",
+    "type": "fish",
+    "color": "light_green"
+  },
+  {
+    "id": "fish_imp",
+    "type": "fish",
+    "color": "light_gray"
+  },
+  {
+    "id": "marine_1",
+    "type": "marine",
+    "color": "light_pink"
+  },
+  {
+    "id": "marine_2",
+    "type": "marine",
+    "color": "orange"
+  },
+  {
+    "id": "marine_imp",
+    "type": "marine",
+    "color": "light_orange"
+  },
+  {
+    "id": "octopus_1",
+    "type": "octopus",
+    "color": "light_blue"
+  },
+  {
+    "id": "octopus_2",
+    "type": "octopus",
+    "color": "yellow"
+  },
+  {
+    "id": "octopus_3",
+    "type": "octopus",
+    "color": "light_green"
+  },
+  {
+    "id": "octopus_4",
+    "type": "octopus",
+    "color": "purple"
+  },
+  {
+    "id": "octopus_5",
+    "type": "octopus",
+    "color": "light_gray"
+  },
+  {
+    "id": "pinguin_1",
+    "type": "pinguin",
+    "color": "purple"
+  },
+  {
+    "id": "pinguin_2",
+    "type": "pinguin",
+    "color": "light_orange"
+  },
+  {
+    "id": "pinguin_3",
+    "type": "pinguin",
+    "color": "light_pink"
+  },
+  {
+    "id": "pinguin_imp",
+    "type": "pinguin",
+    "color": "light_green"
+  },
+  {
+    "id": "shark_1",
+    "type": "shark",
+    "color": "dark_blue"
+  },
+  {
+    "id": "shark_2",
+    "type": "shark",
+    "color": "light_blue"
+  },
+  {
+    "id": "shark_3",
+    "type": "shark",
+    "color": "black"
+  },
+  {
+    "id": "shark_4",
+    "type": "shark",
+    "color": "light_green"
+  },
+  {
+    "id": "shark_5",
+    "type": "shark",
+    "color": "purple"
+  },
+  {
+    "id": "shell_1",
+    "type": "shell",
+    "color": "dark_blue"
+  },
+  {
+    "id": "shell_2",
+    "type": "shell",
+    "color": "light_blue"
+  },
+  {
+    "id": "shell_3",
+    "type": "shell",
+    "color": "black"
+  },
+  {
+    "id": "shell_4",
+    "type": "shell",
+    "color": "yellow"
+  },
+  {
+    "id": "shell_5",
+    "type": "shell",
+    "color": "light_green"
+  },
+  {
+    "id": "sirene_1",
+    "type": "sirene",
+    "color": "white"
+  },
+  {
+    "id": "sirene_2",
+    "type": "sirene",
+    "color": "white"
+  },
+  {
+    "id": "sirene_3",
+    "type": "sirene",
+    "color": "white"
+  },
+  {
+    "id": "sirene_4",
+    "type": "sirene",
+    "color": "white"
+  },
+  {
+    "id": "swimmer_1",
+    "type": "swimmer",
+    "color": "dark_blue"
+  },
+  {
+    "id": "swimmer_2",
+    "type": "swimmer",
+    "color": "light_blue"
+  },
+  {
+    "id": "swimmer_3",
+    "type": "swimmer",
+    "color": "black"
+  },
+  {
+    "id": "swimmer_4",
+    "type": "swimmer",
+    "color": "yellow"
+  },
+  {
+    "id": "swimmer_5",
+    "type": "swimmer",
+    "color": "light_green"
   }
 ]

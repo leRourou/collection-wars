@@ -1,5 +1,5 @@
-import type { GameCard } from "@/types/game-card";
 import cardsData from "@/data/cards.json";
+import type { GameCard } from "@/types/game-card";
 
 export async function getAllCards(): Promise<GameCard[]> {
   return cardsData as GameCard[];

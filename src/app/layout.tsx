@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/session-provider";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import "./globals.css";
-import LoginButton from "./_components/login-button";
+import { LayoutDashboardIcon } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import LoginButton from "./_components/login-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +49,25 @@ export default async function RootLayout({
               <Link href="/">
                 <h1 className="text-lg font-bold">Collection Wars</h1>
               </Link>
-              <LoginButton />
+              <div className="flex items-center gap-4">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link href="/dashboard">
+                      <Button
+                        size="icon-lg"
+                        aria-label="Submit"
+                        variant="default"
+                      >
+                        <LayoutDashboardIcon />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Tableau de bord</p>
+                  </TooltipContent>
+                </Tooltip>
+                <LoginButton />
+              </div>
             </div>
           </nav>
           {children}

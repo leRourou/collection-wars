@@ -1,3 +1,4 @@
+import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Mail } from "lucide-react";
 
 interface EmailSentProps {
   email: string;
@@ -23,9 +23,7 @@ export function EmailSent({ email, onResend }: EmailSentProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p>
-          Un lien de connexion a été envoyé à :
-        </p>
+        <p>Un lien de connexion a été envoyé à :</p>
         <p className="text-primary font-semibold ">{email}</p>
         <p className="mt-4 italic">
           Cliquez sur le lien dans l'email pour vous connecter. Le lien expirera
@@ -34,11 +32,7 @@ export function EmailSent({ email, onResend }: EmailSentProps) {
       </CardContent>
 
       <CardFooter>
-        <Button
-          type="button"
-          onClick={onResend}
-          className="w-full"
-        >
+        <Button type="button" onClick={onResend} className="w-full">
           Renvoyer un email
         </Button>
       </CardFooter>

@@ -1,27 +1,34 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
- 
+
 generator client {
   provider = "prisma-client-js"
 }
- 
+
 model User {
   id            String          @id @default(cuid())
   name          String?
   email         String          @unique
   emailVerified DateTime?
   image         String?
+  username      String?         @unique
   accounts      Account[]
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
- 
+
+  // Game results
+  player1Games GameResult[] @relation("player1Games")
+  player2Games GameResult[] @relation("player2Games")
+  wonGames     GameResult[] @relation("wonGames")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -34,33 +41,33 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
- 
+
 // Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
@@ -71,8 +78,28 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
+}
+
+model GameResult {
+  id              String   @id @default(cuid())
+  player1Id       String
+  player2Id       String
+  winnerId        String?
+  player1Score    Int
+  player2Score    Int
+  durationSeconds Int
+  reason          String   @default("score_reached")
+  endedAt         DateTime @default(now())
+
+  player1 User  @relation("player1Games", fields: [player1Id], references: [id], onDelete: Cascade)
+  player2 User  @relation("player2Games", fields: [player2Id], references: [id], onDelete: Cascade)
+  winner  User? @relation("wonGames", fields: [winnerId], references: [id], onDelete: Cascade)
+
+  @@index([player1Id])
+  @@index([player2Id])
+  @@index([winnerId])
 }

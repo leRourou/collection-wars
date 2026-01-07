@@ -66,9 +66,7 @@ const getConnectionEmailTemplate = (url: string, email: string) => `
         <mj-section background-color="#f4f4f4" padding="20px">
           <mj-column>
             <mj-text align="center" color="#888888" font-size="12px">
-              © ${
-  new Date().getFullYear()
-} Collection Wars. Tous droits réservés.
+              © ${new Date().getFullYear()} Collection Wars. Tous droits réservés.
             </mj-text>
             <mj-text align="center" color="#888888" font-size="12px" padding-top="10px">
               Cet email a été envoyé à ${email}

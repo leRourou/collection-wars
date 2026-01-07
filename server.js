@@ -1,6 +1,7 @@
 const { createServer } = require("node:http");
 const next = require("next");
 const { Server } = require("socket.io");
+const { setupSocketHandlers } = require("./src/socket/server");
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -11,11 +12,14 @@ const handler = app.getRequestHandler();
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
-  const io = new Server(httpServer);
-
-  io.on("connection", (socket) => {
-    console.log("a user connected");
+  const io = new Server(httpServer, {
+    cors: {
+      origin: process.env.NEXTAUTH_URL || "http://localhost:3000",
+      credentials: true,
+    },
   });
+
+  setupSocketHandlers(io);
 
   httpServer
     .once("error", (err) => {
@@ -24,5 +28,6 @@ app.prepare().then(() => {
     })
     .listen(port, () => {
       console.log(`> Ready on http://${hostname}:${port}`);
+      console.log(`> Socket.io server running`);
     });
 });

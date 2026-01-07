@@ -9,7 +9,19 @@ export type GameCard = {
     | "shell"
     | "octopus"
     | "sirene"
-    | "pinguin";
-  color: "blue" | "yellow" | "black" | "light_blue";
+    | "pinguin"
+    | "marine";
+  color:
+    | "black"
+    | "dark_blue"
+    | "light_blue"
+    | "light_gray"
+    | "light_green"
+    | "light_orange"
+    | "light_pink"
+    | "orange"
+    | "purple"
+    | "white"
+    | "yellow";
   improve?: boolean;
 };

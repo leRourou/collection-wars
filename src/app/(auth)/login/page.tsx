@@ -8,14 +8,11 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center p-8 bg-primary/5 min-h-screen">
-      {sentToEmail
-        ? (
-          <EmailSent
-            email={sentToEmail}
-            onResend={() => setSentToEmail(null)}
-          />
-        )
-        : <LoginForm onEmailSent={setSentToEmail} />}
+      {sentToEmail ? (
+        <EmailSent email={sentToEmail} onResend={() => setSentToEmail(null)} />
+      ) : (
+        <LoginForm onEmailSent={setSentToEmail} />
+      )}
     </div>
   );
 }

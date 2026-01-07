@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { auth } from "@/lib/auth/auth";
 
 /**
- * Middleware Next.js
+ * Middleware Next.js avec NextAuth 5.0
+ * Le callback authorized() de authConfig s'exécute automatiquement
  */
-export function middleware(_: NextRequest) {
-  return NextResponse.next();
-}
+export default auth((req) => {
+  // NextAuth gère automatiquement les redirections via le callback authorized()
+  // défini dans auth.config.ts
+});
 
 /**
  * Matcher configuration. Sert pour optimiser les performances.

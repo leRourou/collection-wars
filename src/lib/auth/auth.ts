@@ -1,8 +1,8 @@
-import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "./prisma";
+import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/nodemailer";
 import { sendMagicLinkEmail } from "@/services/email-service";
+import { prisma } from "../prisma";
 import { authConfig } from "./auth.config";
 
 /**
@@ -39,6 +39,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.username = user.username;
       }
       return session;
     },
@@ -47,5 +48,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 });
 
 export type { Session } from "next-auth";
+
 import type { Session as NextAuthSession } from "next-auth";
 export type User = NonNullable<NextAuthSession>["user"];

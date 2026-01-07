@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { GameCard } from "@/types/GameCard";
+import type { GameCard } from "@/types/game-card";
 import { PlayingCard } from "./playing-card";
 
 interface CardStackProps {
@@ -49,7 +49,7 @@ export function CardStack({
                 }}
               >
                 <PlayingCard
-                  text={"cards[cards.length - 1].name"}
+                  card={card}
                   isFlipped={!faceUp}
                   selectable={!!onClick}
                 />
