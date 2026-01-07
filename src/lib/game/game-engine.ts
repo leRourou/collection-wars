@@ -117,17 +117,26 @@ export function keepCard(
   cardToDiscard: GameCard,
   discardPileIndex: 1 | 2,
 ): GameState {
-  const currentPlayer = state.players[state.currentPlayerIndex];
-  currentPlayer.hand.push(cardToKeep);
+  const currentPlayerIndex = state.currentPlayerIndex;
 
-  if (discardPileIndex === 1) {
-    state.discardPile1.push(cardToDiscard);
-  } else {
-    state.discardPile2.push(cardToDiscard);
-  }
+  const newPlayers = state.players.map((player, idx) => {
+    if (idx !== currentPlayerIndex) return player;
+    return { ...player, hand: [...player.hand, cardToKeep] };
+  });
+
+  const newDiscardPile1 = discardPileIndex === 1
+    ? [...state.discardPile1, cardToDiscard]
+    : state.discardPile1;
+
+  const newDiscardPile2 = discardPileIndex === 2
+    ? [...state.discardPile2, cardToDiscard]
+    : state.discardPile2;
 
   return {
     ...state,
+    players: newPlayers,
+    discardPile1: newDiscardPile1,
+    discardPile2: newDiscardPile2,
     roundPhase: RoundPhase.PLAY_DUO,
     drawnCards: undefined,
   };
@@ -183,18 +192,23 @@ export function playDuo(
   card1Id: string,
   card2Id: string,
 ): GameState {
-  const currentPlayer = state.players[state.currentPlayerIndex];
+  const currentPlayerIndex = state.currentPlayerIndex;
+  const currentPlayer = state.players[currentPlayerIndex];
 
   const card1 = currentPlayer.hand.find((c) => c.id === card1Id)!;
   const card2 = currentPlayer.hand.find((c) => c.id === card2Id)!;
 
-  currentPlayer.hand = currentPlayer.hand.filter(
-    (c) => c.id !== card1Id && c.id !== card2Id,
-  );
+  const newPlayers = state.players.map((player, idx) => {
+    if (idx !== currentPlayerIndex) return player;
 
-  currentPlayer.playedCards.push(card1, card2);
+    return {
+      ...player,
+      hand: player.hand.filter((c) => c.id !== card1Id && c.id !== card2Id),
+      playedCards: [...player.playedCards, card1, card2],
+    };
+  });
 
-  return state;
+  return { ...state, players: newPlayers };
 }
 
 export function canEndRound(state: GameState, userId?: string): boolean {
