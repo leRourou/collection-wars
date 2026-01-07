@@ -52,17 +52,22 @@ export function applyCrabEffect(
   const selectedCard = pile[cardIndex];
   const newPile = [...pile.slice(0, cardIndex), ...pile.slice(cardIndex + 1)];
 
-  const currentPlayer = state.players[state.currentPlayerIndex];
-  currentPlayer.hand.push(selectedCard);
+  const currentPlayerIndex = state.currentPlayerIndex;
+  const newPlayers = state.players.map((player, idx) => {
+    if (idx !== currentPlayerIndex) return player;
+    return { ...player, hand: [...player.hand, selectedCard] };
+  });
 
-  if (pileIndex === 1) {
-    state.discardPile1 = newPile;
-  } else {
-    state.discardPile2 = newPile;
-  }
+  const newDiscardPile1 = pileIndex === 1 ? newPile : state.discardPile1;
+  const newDiscardPile2 = pileIndex === 2 ? newPile : state.discardPile2;
 
   return {
-    state,
+    state: {
+      ...state,
+      players: newPlayers,
+      discardPile1: newDiscardPile1,
+      discardPile2: newDiscardPile2,
+    },
     success: true,
     metadata: { selectedCard },
   };
@@ -114,13 +119,20 @@ export function applySharkSwimmerEffect(
   const randomIndex = Math.floor(Math.random() * targetPlayer.hand.length);
   const stolenCard = targetPlayer.hand[randomIndex];
 
-  targetPlayer.hand = targetPlayer.hand.filter((_, i) => i !== randomIndex);
+  const currentPlayerIndex = state.currentPlayerIndex;
 
-  const currentPlayer = state.players[state.currentPlayerIndex];
-  currentPlayer.hand.push(stolenCard);
+  const newPlayers = state.players.map((player) => {
+    if (player.userId === targetPlayerId) {
+      return { ...player, hand: player.hand.filter((_, i) => i !== randomIndex) };
+    }
+    if (player.userId === state.players[currentPlayerIndex].userId) {
+      return { ...player, hand: [...player.hand, stolenCard] };
+    }
+    return player;
+  });
 
   return {
-    state,
+    state: { ...state, players: newPlayers },
     success: true,
     metadata: {
       stolenCard,
