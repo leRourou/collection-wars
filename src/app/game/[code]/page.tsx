@@ -19,6 +19,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useSocket } from "@/hooks/use-socket";
 import { useSession } from "@/lib/auth/auth-client";
 import { isDuoValid } from "@/lib/game/game-engine";
+import type { RoundResult } from "@/lib/game/round-scoring";
 import { calculateScore } from "@/lib/game/scoring";
 import { useGameStore } from "@/store/game-store";
 import type { Room } from "@/types/game";
@@ -47,7 +48,7 @@ export default function GamePage() {
     useState<GameCard | null>(null);
   const [isSelectingDiscardPile, setIsSelectingDiscardPile] = useState(false);
   const [showEndRoundModal, setShowEndRoundModal] = useState(false);
-  const [roundResult, setRoundResult] = useState<any>(null);
+  const [roundResult, setRoundResult] = useState<RoundResult | null>(null);
   const [showRoundResultModal, setShowRoundResultModal] = useState(false);
   const [showFinalSummary, setShowFinalSummary] = useState(false);
   const [finalGameData, setFinalGameData] = useState<any>(null);

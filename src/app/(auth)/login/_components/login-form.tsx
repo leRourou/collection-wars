@@ -89,18 +89,17 @@ export function LoginForm({ onEmailSent }: LoginFormProps) {
               </p>
             )}
           </div>
+          <CardFooter>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full flex justify-center"
+            >
+              {isSubmitting ? "Envoi en cours..." : "Envoyer le lien de connexion"}
+            </Button>
+          </CardFooter>
         </form>
       </CardContent>
-
-      <CardFooter>
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full flex justify-center"
-        >
-          {isSubmitting ? "Envoi en cours..." : "Envoyer le lien de connexion"}
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

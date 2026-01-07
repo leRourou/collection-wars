@@ -51,6 +51,14 @@ export async function POST(request: Request) {
 
     const trimmedUsername = username.trim();
 
+    // Vérifier les caractères autorisés (lettres, chiffres, - et _)
+    if (!/^[a-zA-Z0-9_-]+$/.test(trimmedUsername)) {
+      return NextResponse.json(
+        { error: "Le pseudonyme ne peut contenir que des lettres, chiffres, - et _" },
+        { status: 400 },
+      );
+    }
+
     if (trimmedUsername.length < 5 || trimmedUsername.length > 20) {
       return NextResponse.json(
         { error: "Le pseudonyme doit contenir entre 5 et 20 caractères" },
