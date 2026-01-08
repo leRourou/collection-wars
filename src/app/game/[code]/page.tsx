@@ -279,6 +279,7 @@ export default function GamePage() {
     isActionLoading,
     isSelectingDiscardPile,
     drawnCards,
+    myCurrentPoints,
   ]);
 
   if (!isConnected || !gameState) {
