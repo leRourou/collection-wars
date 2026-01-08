@@ -11,7 +11,7 @@ const getConnectionEmailTemplate = (url: string, email: string) => `
       </mj-head>
       <mj-body background-color="#f4f4f4">
         <!-- Header -->
-        <mj-section background-color="#8b5cf6" padding="30px 20px">
+        <mj-section background-color="#1447E6" padding="30px 20px">
           <mj-column>
             <mj-text align="center" color="#ffffff" font-size="28px" font-weight="bold">
               Collection Wars
@@ -35,7 +35,7 @@ const getConnectionEmailTemplate = (url: string, email: string) => `
             </mj-text>
 
             <mj-button
-              background-color="#8b5cf6"
+              background-color="#1447E6"
               color="#ffffff"
               font-size="16px"
               font-weight="bold"
@@ -50,7 +50,7 @@ const getConnectionEmailTemplate = (url: string, email: string) => `
               Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :
             </mj-text>
 
-            <mj-text color="#8b5cf6" font-size="12px" padding-top="5px">
+            <mj-text color="#1447E6" font-size="12px" padding-top="5px">
               ${url}
             </mj-text>
 

@@ -54,7 +54,10 @@ export async function POST(request: Request) {
     // Vérifier les caractères autorisés (lettres, chiffres, - et _)
     if (!/^[a-zA-Z0-9_-]+$/.test(trimmedUsername)) {
       return NextResponse.json(
-        { error: "Le pseudonyme ne peut contenir que des lettres, chiffres, - et _" },
+        {
+          error:
+            "Le pseudonyme ne peut contenir que des lettres, chiffres, - et _",
+        },
         { status: 400 },
       );
     }

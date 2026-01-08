@@ -29,6 +29,10 @@ function countDuoPoints(cards: GameCard[]): number {
     (c) => c.type === "fish" && c.id !== "fish_imp",
   ).length;
 
+  points += crabs * 1;
+  points += boats * 1;
+  points += fish * 1;
+
   const crabDuos = Math.floor(crabs / 2);
   const boatDuos = Math.floor(boats / 2);
   const fishDuos = Math.floor(fish / 2);
@@ -43,6 +47,9 @@ function countDuoPoints(cards: GameCard[]): number {
   const sharks = cards.filter(
     (c) => c.type === "shark" && c.id !== "shark_imp",
   ).length;
+
+  points += swimmers * 1;
+  points += sharks * 1;
 
   const sharkSwimmerDuos = Math.min(swimmers, sharks);
   const sharkImp = hasImpMultiplier("shark") || hasImpMultiplier("swimmer");

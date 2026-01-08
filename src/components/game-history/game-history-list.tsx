@@ -43,9 +43,7 @@ export function GameHistoryList() {
       setCurrentPage(data.pagination.page);
       setTotalPages(data.pagination.totalPages);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Une erreur est survenue",
-      );
+      setError(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);

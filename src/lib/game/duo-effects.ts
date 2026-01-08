@@ -123,7 +123,10 @@ export function applySharkSwimmerEffect(
 
   const newPlayers = state.players.map((player) => {
     if (player.userId === targetPlayerId) {
-      return { ...player, hand: player.hand.filter((_, i) => i !== randomIndex) };
+      return {
+        ...player,
+        hand: player.hand.filter((_, i) => i !== randomIndex),
+      };
     }
     if (player.userId === state.players[currentPlayerIndex].userId) {
       return { ...player, hand: [...player.hand, stolenCard] };

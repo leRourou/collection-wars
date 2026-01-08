@@ -93,9 +93,11 @@ export function LoginForm({ onEmailSent }: LoginFormProps) {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full flex justify-center"
+              className="w-full flex justify-center mt-4"
             >
-              {isSubmitting ? "Envoi en cours..." : "Envoyer le lien de connexion"}
+              {isSubmitting
+                ? "Envoi en cours..."
+                : "Envoyer le lien de connexion"}
             </Button>
           </CardFooter>
         </form>
