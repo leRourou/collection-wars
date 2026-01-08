@@ -470,9 +470,9 @@ export default function GamePage() {
 
       {/* Cartes piochées (choix) */}
       {drawnCards && !isSelectingDiscardPile && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl">
-            <h3 className="text-lg font-semibold mb-6 text-center">
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
+            <h3 className="text-lg font-semibold mb-6 text-center dark:text-gray-100">
               Choisissez une carte à garder
             </h3>
             <div className="flex gap-6">
@@ -497,9 +497,9 @@ export default function GamePage() {
 
       {/* Sélection de la défausse */}
       {isSelectingDiscardPile && selectedCardForDiscard && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl">
-            <h3 className="text-lg font-semibold mb-6 text-center">
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
+            <h3 className="text-lg font-semibold mb-6 text-center dark:text-gray-100">
               Choisissez une défausse pour l'autre carte
             </h3>
             <div className="flex gap-6 justify-center">
@@ -524,9 +524,9 @@ export default function GamePage() {
 
       {/* Modal de résultat de manche */}
       {showRoundResultModal && roundResult && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-3xl">
-            <h3 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2">
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-3xl">
+            <h3 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2 dark:text-gray-100">
               {roundResult.choice === "stop" ? (
                 <>
                   <CircleStop className="w-6 h-6 text-red-500" />
@@ -589,7 +589,7 @@ export default function GamePage() {
                       +{playerScore.totalPoints} points
                     </span>
                   </div>
-                  <div className="text-sm text-gray-700 space-y-1">
+                  <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                     <div className="flex justify-between">
                       <span>Points des cartes :</span>
                       <span className="font-semibold">
@@ -674,9 +674,9 @@ export default function GamePage() {
 
       {/* Modal de résumé final */}
       {showFinalSummary && finalGameData && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-3xl">
-            <h3 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-3">
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-3xl">
+            <h3 className="text-3xl font-bold mb-6 text-center flex items-center justify-center gap-3 dark:text-gray-100">
               <Trophy className="w-8 h-8 text-yellow-500" />
               <span>Partie terminée !</span>
             </h3>
@@ -735,12 +735,12 @@ export default function GamePage() {
 
       {/* Modal de fin de manche */}
       {showEndRoundModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-2xl">
-            <h3 className="text-2xl font-bold mb-6 text-center">
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-2xl">
+            <h3 className="text-2xl font-bold mb-6 text-center dark:text-gray-100">
               Mettre fin à la manche ?
             </h3>
-            <p className="text-center mb-6 text-gray-700">
+            <p className="text-center mb-6 text-gray-700 dark:text-gray-300">
               Vous avez {myCurrentPoints} points. Choisissez votre stratégie :
             </p>
             <div className="flex flex-col gap-4">
@@ -772,7 +772,7 @@ export default function GamePage() {
               <button
                 type="button"
                 onClick={() => setShowEndRoundModal(false)}
-                className="px-8 py-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-semibold transition-colors"
+                className="px-8 py-4 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-semibold transition-colors"
               >
                 Annuler
               </button>
@@ -920,9 +920,9 @@ export default function GamePage() {
       {/* Modal choix de pile (effet crabe) */}
       {effectInProgress?.type === "crab" &&
         effectInProgress.step === "choose_pile" && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-2xl">
-              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900">
+          <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
+              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
                 Effet Crabe : Choisissez une défausse
               </h3>
               <div className="flex gap-6 justify-center">
@@ -960,9 +960,9 @@ export default function GamePage() {
       {/* Modal sélection de carte (effet crabe) */}
       {effectInProgress?.type === "crab" &&
         effectInProgress.step === "choose_card" && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white p-8 rounded-lg shadow-2xl max-w-6xl w-full overflow-y-auto max-h-[90vh]">
-              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900">
+          <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-6xl w-full overflow-y-auto max-h-[90vh]">
+              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
                 Choisissez une carte à récupérer
               </h3>
               <div className="flex flex-wrap gap-4 justify-center">
@@ -996,9 +996,9 @@ export default function GamePage() {
       {/* Modal sélection de cible (effet requin/nageur) */}
       {effectInProgress?.type === "shark_swimmer" &&
         effectInProgress.step === "choose_target" && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-2xl">
-              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900">
+          <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
+              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
                 Effet Requin/Nageur : Choisissez un adversaire
               </h3>
               <div className="flex flex-col gap-4">

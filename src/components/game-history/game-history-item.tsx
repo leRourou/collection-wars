@@ -47,18 +47,18 @@ export function GameHistoryItem({ game }: GameHistoryItemProps) {
     >
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex items-center gap-3 flex-1">
-          <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-sm">
-            <User className="w-5 h-5 text-gray-700" />
+          <div className="w-10 h-10 rounded-full bg-white/80 dark:bg-gray-700/80 flex items-center justify-center shadow-sm">
+            <User className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-base text-gray-900">
+            <p className="font-semibold text-base text-gray-900 dark:text-gray-100">
               {game.opponentName}
             </p>
             <div
               className={`flex items-center gap-2 text-sm font-medium mt-0.5 ${config.scoreColor}`}
             >
               <span className="font-bold text-lg">{game.currentUserScore}</span>
-              <span className="text-gray-400">-</span>
+              <span className="text-gray-400 dark:text-gray-500">-</span>
               <span className="font-bold text-lg opacity-60">
                 {game.opponentScore}
               </span>
@@ -73,20 +73,20 @@ export function GameHistoryItem({ game }: GameHistoryItemProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
+      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5" />
           <span>{formatDuration(game.durationSeconds)}</span>
         </div>
-        <span className="text-gray-300">•</span>
+        <span className="text-gray-300 dark:text-gray-600">•</span>
         <div className="flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5" />
           <span>{formatRelativeDate(new Date(game.endedAt))}</span>
         </div>
       </div>
 
-      <div className="mt-2 pt-2 border-t border-gray-200/50">
-        <p className="text-xs text-gray-500 italic">
+      <div className="mt-2 pt-2 border-t border-gray-200/50 dark:border-gray-700/50">
+        <p className="text-xs text-gray-500 dark:text-gray-400 italic">
           {translateEndReason(game.reason)}
         </p>
       </div>
