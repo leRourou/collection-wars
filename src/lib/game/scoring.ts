@@ -16,19 +16,37 @@ export function calculateScore(player: PlayerState): number {
 function countDuoPoints(cards: GameCard[]): number {
   let points = 0;
 
-  const crabs = cards.filter((c) => c.type === "crab").length;
-  const boats = cards.filter((c) => c.type === "boat").length;
-  const fish = cards.filter((c) => c.type === "fish").length;
+  const hasImpMultiplier = (type: string) =>
+    cards.some((c) => c.id === `${type}_imp`);
 
-  // 2 points per duo (pair of cards)
-  points += Math.floor(crabs / 2) * 2;
-  points += Math.floor(boats / 2) * 2;
-  points += Math.floor(fish / 2) * 2;
+  const crabs = cards.filter(
+    (c) => c.type === "crab" && c.id !== "crab_imp",
+  ).length;
+  const boats = cards.filter(
+    (c) => c.type === "boat" && c.id !== "boat_imp",
+  ).length;
+  const fish = cards.filter(
+    (c) => c.type === "fish" && c.id !== "fish_imp",
+  ).length;
 
-  const swimmers = cards.filter((c) => c.type === "swimmer").length;
-  const sharks = cards.filter((c) => c.type === "shark").length;
-  // 2 points per swimmer-shark duo
-  points += Math.min(swimmers, sharks) * 2;
+  const crabDuos = Math.floor(crabs / 2);
+  const boatDuos = Math.floor(boats / 2);
+  const fishDuos = Math.floor(fish / 2);
+
+  points += crabDuos * 2 * (hasImpMultiplier("crab") ? 3 : 1);
+  points += boatDuos * 2 * (hasImpMultiplier("boat") ? 3 : 1);
+  points += fishDuos * 2 * (hasImpMultiplier("fish") ? 3 : 1);
+
+  const swimmers = cards.filter(
+    (c) => c.type === "swimmer" && c.id !== "swimmer_imp",
+  ).length;
+  const sharks = cards.filter(
+    (c) => c.type === "shark" && c.id !== "shark_imp",
+  ).length;
+
+  const sharkSwimmerDuos = Math.min(swimmers, sharks);
+  const sharkImp = hasImpMultiplier("shark") || hasImpMultiplier("swimmer");
+  points += sharkSwimmerDuos * 2 * (sharkImp ? 3 : 1);
 
   return points;
 }
