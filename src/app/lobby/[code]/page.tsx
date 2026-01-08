@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FloatingCardsBackground } from "@/components/ui/floating-cards-background";
 import { Spinner } from "@/components/ui/spinner";
 import { useSocket } from "@/hooks/use-socket";
 import { useSession } from "@/lib/auth/auth-client";
@@ -90,8 +91,10 @@ export default function LobbyPage() {
   const isHost = currentRoom.hostId === session?.user?.id;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      <Card className="w-full max-w-2xl">
+    <>
+      <FloatingCardsBackground />
+      <div className="flex flex-col items-center justify-center min-h-screen p-8 relative z-10">
+        <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle>Salle: {roomCode}</CardTitle>
         </CardHeader>
@@ -145,5 +148,6 @@ export default function LobbyPage() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }

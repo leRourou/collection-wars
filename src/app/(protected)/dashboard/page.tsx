@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { FloatingCardsBackground } from "@/components/ui/floating-cards-background";
 import {
   InputOTP,
   InputOTPGroup,
@@ -106,6 +107,7 @@ export default function DashboardPage() {
 
   return (
     <>
+      <FloatingCardsBackground />
       <UsernameModal
         open={isUsernameModalOpen}
         onOpenChange={setIsUsernameModalOpen}
@@ -114,7 +116,7 @@ export default function DashboardPage() {
         required={!hasUsername}
       />
 
-      <div className="flex flex-col items-center w-6xl mx-auto mt-8 gap-6">
+      <div className="flex flex-col items-center w-6xl mx-auto mt-8 gap-6 relative z-10">
         {!hasUsername && (
           <div className="bg-yellow-500/10 border border-yellow-500 text-yellow-600 px-4 py-2 rounded">
             Veuillez configurer votre pseudonyme pour accéder aux
