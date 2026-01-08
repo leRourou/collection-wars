@@ -1,10 +1,13 @@
+// Load environment variables from .env.local
+require("dotenv").config({ path: ".env.local" });
+
 const { createServer } = require("node:http");
 const next = require("next");
 const { Server } = require("socket.io");
 const { setupSocketHandlers } = require("./src/socket/server");
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = dev ? "localhost" : "0.0.0.0";
+const hostname = "localhost";
 const port = parseInt(process.env.PORT || "3000", 10);
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
@@ -13,10 +16,8 @@ app.prepare().then(() => {
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer, {
-    path: "/socket.io/",
-    transports: ["websocket", "polling"],
     cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000",
+      origin: process.env.NEXTAUTH_URL || "http://localhost:3000",
       credentials: true,
     },
   });
