@@ -126,13 +126,15 @@ export function keepCard(
     return { ...player, hand: [...player.hand, cardToKeep] };
   });
 
-  const newDiscardPile1 = discardPileIndex === 1
-    ? [...state.discardPile1, cardToDiscard]
-    : state.discardPile1;
+  const newDiscardPile1 =
+    discardPileIndex === 1
+      ? [...state.discardPile1, cardToDiscard]
+      : state.discardPile1;
 
-  const newDiscardPile2 = discardPileIndex === 2
-    ? [...state.discardPile2, cardToDiscard]
-    : state.discardPile2;
+  const newDiscardPile2 =
+    discardPileIndex === 2
+      ? [...state.discardPile2, cardToDiscard]
+      : state.discardPile2;
 
   return {
     ...state,
@@ -225,12 +227,28 @@ export function calculatePlayerPoints(player: PlayerState): number {
   return calculateScore(player);
 }
 
+export function hasAllPlayersPlayedAfterLastChance(state: GameState): boolean {
+  if (!state.roundEnder || state.endChoice !== EndRoundChoice.LAST_CHANCE) {
+    return false;
+  }
+  return state.lastChancePlayed.length === state.players.length;
+}
+
 export function passTurn(state: GameState): GameState {
-  return {
+  const newState = {
     ...state,
     currentPlayerIndex: (state.currentPlayerIndex + 1) % state.players.length,
     roundPhase: RoundPhase.DRAW,
   };
+
+  if (state.endChoice === EndRoundChoice.LAST_CHANCE && state.roundEnder) {
+    const currentPlayerId = state.players[state.currentPlayerIndex].userId;
+    if (!state.lastChancePlayed.includes(currentPlayerId)) {
+      newState.lastChancePlayed = [...state.lastChancePlayed, currentPlayerId];
+    }
+  }
+
+  return newState;
 }
 
 export function endRound(
@@ -240,6 +258,17 @@ export function endRound(
 ): GameState {
   if (!canEndRound(state, userId)) {
     throw new Error("Cannot end round");
+  }
+
+  if (choice === EndRoundChoice.LAST_CHANCE) {
+    return {
+      ...state,
+      roundEnder: userId,
+      endChoice: choice,
+      lastChancePlayed: [userId],
+      currentPlayerIndex: (state.currentPlayerIndex + 1) % state.players.length,
+      roundPhase: RoundPhase.DRAW,
+    };
   }
 
   return {

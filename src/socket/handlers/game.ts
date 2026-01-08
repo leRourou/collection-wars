@@ -9,7 +9,7 @@ import { calculateRoundScores } from "@/lib/game/round-scoring";
 import { hasWinningCondition } from "@/lib/game/scoring";
 import { stateManager } from "@/lib/game/state-manager";
 import { prisma } from "@/lib/prisma";
-import { RoundPhase } from "@/types/game";
+import { EndRoundChoice, RoundPhase } from "@/types/game";
 import type { GameEndReason, PlayerId } from "@/types/game";
 import type { TypedServer, TypedSocket } from "../server";
 
@@ -301,7 +301,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
     }
   });
 
-  socket.on("game:pass-turn", () => {
+  socket.on("game:pass-turn", async () => {
     try {
       const room = stateManager.getRoomByPlayer(socket.userId);
       if (!room) return;
@@ -318,6 +318,10 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
       stateManager.updateGameState(room.code, () => newState);
 
       io.to(room.code).emit("game:state-update", { gameState: newState });
+
+      if (engine.hasAllPlayersPlayedAfterLastChance(newState)) {
+        await handleRoundEnd(io, room.code, newState);
+      }
     } catch (error) {
       console.error("Error passing turn:", error);
     }
@@ -469,48 +473,11 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
 
       io.to(room.code).emit("game:state-update", { gameState: newState });
 
-      // Calculate round scores
-      const roundResult = calculateRoundScores(newState);
-
-      if (roundResult) {
-        // Update player scores
-        const updatedState = {
-          ...newState,
-          players: newState.players.map((player) => {
-            const scoreInfo = roundResult.playerScores.find(
-              (s) => s.userId === player.userId,
-            );
-            return scoreInfo
-              ? { ...player, score: player.score + scoreInfo.totalPoints }
-              : player;
-          }),
-        };
-
-        stateManager.updateGameState(room.code, () => updatedState);
-
-        // Check if someone won by reaching target score
-        const winner = updatedState.players.find(
-          (p) => p.score >= updatedState.targetScore,
-        );
-
-        if (winner) {
-          // Game won by score - save to DB and emit game:ended
-          await handleGameEnd(io, room.code, winner.userId, "score_reached");
-        } else {
-          // Round ended but game continues - emit round:ended
-          io.to(room.code).emit("round:ended", {
-            scores: roundResult.playerScores.reduce(
-              (acc, s) => {
-                acc[s.userId] = s.totalPoints;
-                return acc;
-              },
-              {} as Record<string, number>,
-            ),
-            gameState: updatedState,
-            roundResult,
-          });
-        }
+      if (choice === EndRoundChoice.LAST_CHANCE) {
+        return;
       }
+
+      await handleRoundEnd(io, room.code, newState);
     } catch (error) {
       console.error("Error ending round:", error);
       socket.emit("game:invalid-action", {
@@ -518,6 +485,57 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
       });
     }
   });
+}
+
+async function handleRoundEnd(
+  io: TypedServer,
+  roomCode: string,
+  state: import("@/types/game").GameState,
+) {
+  const finalState = {
+    ...state,
+    roundPhase: RoundPhase.END_TURN,
+  };
+  stateManager.updateGameState(roomCode, () => finalState);
+  io.to(roomCode).emit("game:state-update", { gameState: finalState });
+
+  const roundResult = calculateRoundScores(finalState);
+
+  if (roundResult) {
+    const updatedState = {
+      ...finalState,
+      players: finalState.players.map((player) => {
+        const scoreInfo = roundResult.playerScores.find(
+          (s) => s.userId === player.userId,
+        );
+        return scoreInfo
+          ? { ...player, score: player.score + scoreInfo.totalPoints }
+          : player;
+      }),
+    };
+
+    stateManager.updateGameState(roomCode, () => updatedState);
+
+    const winner = updatedState.players.find(
+      (p) => p.score >= updatedState.targetScore,
+    );
+
+    if (winner) {
+      await handleGameEnd(io, roomCode, winner.userId, "score_reached");
+    } else {
+      io.to(roomCode).emit("round:ended", {
+        scores: roundResult.playerScores.reduce(
+          (acc, s) => {
+            acc[s.userId] = s.totalPoints;
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
+        gameState: updatedState,
+        roundResult,
+      });
+    }
+  }
 }
 
 /**
