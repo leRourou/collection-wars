@@ -36,7 +36,7 @@ export function registerMatchHandlers(io: TypedServer, socket: TypedSocket) {
         return;
       }
 
-      const newState = engine.resetForNextRound(state);
+      const newState = await engine.resetForNextRound(state);
       stateManager.updateGameState(room.code, () => newState);
 
       io.to(room.code).emit("round:continue-requested");

@@ -279,9 +279,25 @@ export function endRound(
   };
 }
 
-export function resetForNextRound(state: GameState): GameState {
+export async function resetForNextRound(state: GameState): Promise<GameState> {
+  const cards = await getAllCardsShuffled();
+
+  const discardPile1 = [cards[0]];
+  const discardPile2 = [cards[1]];
+  const deck = cards.slice(2);
+
+  const players: PlayerState[] = state.players.map((player) => ({
+    ...player,
+    hand: [],
+    playedCards: [],
+  }));
+
   return {
     ...state,
+    players,
+    deck,
+    discardPile1,
+    discardPile2,
     roundNumber: state.roundNumber + 1,
     roundPhase: RoundPhase.DRAW,
     roundEnder: undefined,
