@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { GameHistoryList } from "@/components/game-history/game-history-list";
 import { Button } from "@/components/ui/button";
 import {
@@ -117,6 +118,8 @@ export default function DashboardPage() {
       />
 
       <div className="flex flex-col items-center w-6xl mx-auto mt-8 gap-6 relative z-10">
+        <DashboardHeader />
+
         {!hasUsername && (
           <div className="bg-yellow-500/10 border border-yellow-500 text-yellow-600 px-4 py-2 rounded">
             Veuillez configurer votre pseudonyme pour accéder aux
