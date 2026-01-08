@@ -114,11 +114,13 @@ export interface ServerToClientEvents {
       handCount: number;
     }>;
   }) => void;
-  "effect:executed": (data: {
-    effectType: string;
-    metadata: any;
-  }) => void;
+  "effect:executed": (data: { effectType: string; metadata: any }) => void;
   "effect:failed": (data: { effectType: string; reason: string }) => void;
+  "duo:played": (data: {
+    playerName: string;
+    duoType: string;
+    effectType: string | null;
+  }) => void;
 }
 
 export interface ClientToServerEvents {

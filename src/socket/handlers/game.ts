@@ -187,11 +187,20 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
       // Detect effect type
       const effectType = getDuoEffectType(card1, card2);
 
+      const playerName =
+        state.players.find((p) => p.userId === socket.userId)?.name || "Joueur";
+      const duoType = card1.type === card2.type ? card1.type : "shark_swimmer";
+
       if (!effectType) {
         // No effect - pass turn normally
         const finalState = engine.passTurn(newState);
         stateManager.updateGameState(room.code, () => finalState);
         io.to(room.code).emit("game:state-update", { gameState: finalState });
+        io.to(room.code).emit("duo:played", {
+          playerName,
+          duoType,
+          effectType: null,
+        });
         return;
       }
 
@@ -204,6 +213,11 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
             stateManager.updateGameState(room.code, () => finalState);
             io.to(room.code).emit("game:state-update", {
               gameState: finalState,
+            });
+            io.to(room.code).emit("duo:played", {
+              playerName,
+              duoType,
+              effectType: "fish",
             });
             io.to(socket.id).emit("effect:executed", {
               effectType: "fish",
@@ -227,6 +241,11 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
           newState.roundPhase = RoundPhase.DRAW;
           stateManager.updateGameState(room.code, () => newState);
           io.to(room.code).emit("game:state-update", { gameState: newState });
+          io.to(room.code).emit("duo:played", {
+            playerName,
+            duoType,
+            effectType: "boat",
+          });
           io.to(socket.id).emit("effect:executed", {
             effectType: "boat",
             metadata: {},
@@ -386,7 +405,17 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
         delete result.state.pendingEffect;
         const finalState = engine.passTurn(result.state);
         stateManager.updateGameState(room.code, () => finalState);
+
+        const playerName =
+          state.players.find((p) => p.userId === socket.userId)?.name ||
+          "Joueur";
+
         io.to(room.code).emit("game:state-update", { gameState: finalState });
+        io.to(room.code).emit("duo:played", {
+          playerName,
+          duoType: "crab",
+          effectType: "crab",
+        });
         io.to(socket.id).emit("effect:executed", {
           effectType: "crab",
           metadata: result.metadata,
@@ -424,7 +453,17 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
         delete result.state.pendingEffect;
         const finalState = engine.passTurn(result.state);
         stateManager.updateGameState(room.code, () => finalState);
+
+        const playerName =
+          state.players.find((p) => p.userId === socket.userId)?.name ||
+          "Joueur";
+
         io.to(room.code).emit("game:state-update", { gameState: finalState });
+        io.to(room.code).emit("duo:played", {
+          playerName,
+          duoType: "shark_swimmer",
+          effectType: "shark_swimmer",
+        });
         io.to(socket.id).emit("effect:executed", {
           effectType: "shark_swimmer",
           metadata: result.metadata,
