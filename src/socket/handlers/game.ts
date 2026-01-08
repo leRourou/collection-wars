@@ -9,6 +9,7 @@ import { calculateRoundScores } from "@/lib/game/round-scoring";
 import { hasWinningCondition } from "@/lib/game/scoring";
 import { stateManager } from "@/lib/game/state-manager";
 import { prisma } from "@/lib/prisma";
+import { RoundPhase } from "@/types/game";
 import type { GameEndReason, PlayerId } from "@/types/game";
 import type { TypedServer, TypedSocket } from "../server";
 
@@ -223,7 +224,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
         }
 
         case "boat": {
-          // Replay - don't pass turn
+          newState.roundPhase = RoundPhase.DRAW;
           stateManager.updateGameState(room.code, () => newState);
           io.to(room.code).emit("game:state-update", { gameState: newState });
           io.to(socket.id).emit("effect:executed", {
