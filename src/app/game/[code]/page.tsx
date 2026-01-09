@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { PlayingCard } from "@/components/game/playing-card";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -44,25 +44,30 @@ export default function GamePage() {
 
   const roomCode = params.code as string;
   const [isActionLoading, setIsActionLoading] = useState(false);
-  const [selectedCardForDiscard, setSelectedCardForDiscard] =
-    useState<GameCard | null>(null);
+  const [selectedCardForDiscard, setSelectedCardForDiscard] = useState<
+    GameCard | null
+  >(null);
   const [isSelectingDiscardPile, setIsSelectingDiscardPile] = useState(false);
   const [showEndRoundModal, setShowEndRoundModal] = useState(false);
   const [roundResult, setRoundResult] = useState<RoundResult | null>(null);
   const [showRoundResultModal, setShowRoundResultModal] = useState(false);
   const [showFinalSummary, setShowFinalSummary] = useState(false);
-  const [finalGameData, setFinalGameData] = useState<{
-    winnerId: string;
-    finalScores: Record<string, number>;
-  } | null>(null);
+  const [finalGameData, setFinalGameData] = useState<
+    {
+      winnerId: string;
+      finalScores: Record<string, number>;
+    } | null
+  >(null);
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
 
   // Duo effect state
-  const [effectInProgress, setEffectInProgress] = useState<{
-    type: "crab" | "shark_swimmer" | null;
-    step: "choose_pile" | "choose_card" | "choose_target" | null;
-    pileIndex?: 1 | 2;
-  } | null>(null);
+  const [effectInProgress, setEffectInProgress] = useState<
+    {
+      type: "crab" | "shark_swimmer" | null;
+      step: "choose_pile" | "choose_card" | "choose_target" | null;
+      pileIndex?: 1 | 2;
+    } | null
+  >(null);
   const [crabPileCards, setCrabPileCards] = useState<GameCard[]>([]);
   const [possibleTargets, setPossibleTargets] = useState<
     Array<{
@@ -158,27 +163,6 @@ export default function GamePage() {
       setEffectInProgress(null);
       setCrabPileCards([]);
       setPossibleTargets([]);
-
-      switch (effectType) {
-        case "crab":
-          toast.success(
-            `Carte récupérée : ${metadata.selectedCard?.type || "inconnue"}`,
-          );
-          break;
-        case "boat":
-          toast.success("Effet Bateau : Vous pouvez rejouer !");
-          break;
-        case "fish":
-          toast.success(
-            `Carte piochée : ${metadata.drawnCard?.type || "inconnue"}`,
-          );
-          break;
-        case "shark_swimmer":
-          toast.success(
-            `Carte volée à ${metadata.targetPlayerName} : ${metadata.stolenCard?.type || "inconnue"}`,
-          );
-          break;
-      }
     });
 
     socket.on("effect:failed", ({ effectType, reason }) => {
@@ -214,14 +198,11 @@ export default function GamePage() {
   const isHost = currentRoom?.hostId === myUserId;
 
   // Check which actions are available
-  const canDrawDeck =
-    (gameState?.deck.length ?? 0) >= 2 &&
+  const canDrawDeck = (gameState?.deck.length ?? 0) >= 2 &&
     gameState?.roundPhase === RoundPhase.DRAW;
-  const canDrawDiscard1 =
-    gameState?.roundPhase === RoundPhase.DRAW &&
+  const canDrawDiscard1 = gameState?.roundPhase === RoundPhase.DRAW &&
     (gameState?.discardPile1.length ?? 0) > 0;
-  const canDrawDiscard2 =
-    gameState?.roundPhase === RoundPhase.DRAW &&
+  const canDrawDiscard2 = gameState?.roundPhase === RoundPhase.DRAW &&
     (gameState?.discardPile2.length ?? 0) > 0;
 
   // Check if selected cards form a valid duo
@@ -229,8 +210,7 @@ export default function GamePage() {
     .map((cardId) => myPlayer?.hand.find((c) => c.id === cardId))
     .filter(Boolean);
 
-  const canPlayDuoNow =
-    selectedCardsData.length === 2 &&
+  const canPlayDuoNow = selectedCardsData.length === 2 &&
     gameState?.roundPhase !== RoundPhase.DRAW &&
     selectedCardsData[0] &&
     selectedCardsData[1] &&
@@ -246,12 +226,12 @@ export default function GamePage() {
   // Check if player has any valid actions available
   const hasAnyValidDuo = myPlayer?.hand
     ? myPlayer.hand.some((card1, i) =>
-        myPlayer.hand.some((card2, j) => i < j && isDuoValid(card1, card2)),
-      )
+      myPlayer.hand.some((card2, j) => i < j && isDuoValid(card1, card2))
+    )
     : false;
 
-  const hasValidActions =
-    canDrawDeck || canDrawDiscard1 || canDrawDiscard2 || hasAnyValidDuo;
+  const hasValidActions = canDrawDeck || canDrawDiscard1 || canDrawDiscard2 ||
+    hasAnyValidDuo;
 
   // Auto-pass turn when no valid actions
   useEffect(() => {
@@ -263,8 +243,9 @@ export default function GamePage() {
       isSelectingDiscardPile ||
       drawnCards !== null ||
       myCurrentPoints >= 7 // Don't auto-pass if player can end the round
-    )
+    ) {
       return;
+    }
 
     toast.info("Aucune action disponible, passage automatique du tour");
     const timer = setTimeout(() => {
@@ -379,7 +360,9 @@ export default function GamePage() {
                 }).map((_, duoIndex) => {
                   const card1 = opponent.playedCards[duoIndex * 2];
                   const card2 = opponent.playedCards[duoIndex * 2 + 1];
-                  const duoKey = `${card1?.id || "empty"}-${card2?.id || "solo"}`;
+                  const duoKey = `${card1?.id || "empty"}-${
+                    card2?.id || "solo"
+                  }`;
                   return (
                     <div key={duoKey} className="flex relative">
                       {card1 && (
@@ -417,21 +400,24 @@ export default function GamePage() {
       <div className="flex justify-center items-center gap-8">
         <div className="text-center">
           <p className="text-sm mb-2">Défausse 1</p>
-          {gameState.discardPile1.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => handleDrawFromDiscard(1)}
-              disabled={!isMyTurn || !canDrawDiscard1 || isActionLoading}
-            >
-              <PlayingCard
-                card={gameState.discardPile1[gameState.discardPile1.length - 1]}
-                isFlipped={false}
-                selectable={isMyTurn && canDrawDiscard1 && !isActionLoading}
-              />
-            </button>
-          ) : (
-            <div className="w-32 h-48 border-2 border-dashed border-gray-400 rounded" />
-          )}
+          {gameState.discardPile1.length > 0
+            ? (
+              <button
+                type="button"
+                onClick={() => handleDrawFromDiscard(1)}
+                disabled={!isMyTurn || !canDrawDiscard1 || isActionLoading}
+              >
+                <PlayingCard
+                  card={gameState
+                    .discardPile1[gameState.discardPile1.length - 1]}
+                  isFlipped={false}
+                  selectable={isMyTurn && canDrawDiscard1 && !isActionLoading}
+                />
+              </button>
+            )
+            : (
+              <div className="w-32 h-48 border-2 border-dashed border-gray-400 rounded" />
+            )}
         </div>
 
         <div className="text-center">
@@ -440,34 +426,39 @@ export default function GamePage() {
             onClick={handleDrawFromDeck}
             disabled={!isMyTurn || !canDrawDeck || isActionLoading}
           >
-            {isActionLoading ? (
-              <>
-                <Spinner className="mr-2" />
-                Pioche...
-              </>
-            ) : (
-              "Piocher"
-            )}
+            {isActionLoading
+              ? (
+                <>
+                  <Spinner className="mr-2" />
+                  Pioche...
+                </>
+              )
+              : (
+                "Piocher"
+              )}
           </Button>
         </div>
 
         <div className="text-center">
           <p className="text-sm mb-2">Défausse 2</p>
-          {gameState.discardPile2.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => handleDrawFromDiscard(2)}
-              disabled={!isMyTurn || !canDrawDiscard2 || isActionLoading}
-            >
-              <PlayingCard
-                card={gameState.discardPile2[gameState.discardPile2.length - 1]}
-                isFlipped={false}
-                selectable={isMyTurn && canDrawDiscard2 && !isActionLoading}
-              />
-            </button>
-          ) : (
-            <div className="w-32 h-48 border-2 border-dashed border-gray-400 rounded" />
-          )}
+          {gameState.discardPile2.length > 0
+            ? (
+              <button
+                type="button"
+                onClick={() => handleDrawFromDiscard(2)}
+                disabled={!isMyTurn || !canDrawDiscard2 || isActionLoading}
+              >
+                <PlayingCard
+                  card={gameState
+                    .discardPile2[gameState.discardPile2.length - 1]}
+                  isFlipped={false}
+                  selectable={isMyTurn && canDrawDiscard2 && !isActionLoading}
+                />
+              </button>
+            )
+            : (
+              <div className="w-32 h-48 border-2 border-dashed border-gray-400 rounded" />
+            )}
         </div>
       </div>
 
@@ -530,41 +521,39 @@ export default function GamePage() {
         <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-3xl">
             <h3 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2 dark:text-gray-100">
-              {roundResult.choice === "stop" ? (
-                <>
-                  <CircleStop className="w-6 h-6 text-red-500" />
-                  <span>STOP</span>
-                </>
-              ) : (
-                <>
-                  <Dice3 className="w-6 h-6 text-blue-500" />
-                  <span>DERNIÈRE CHANCE</span>
-                </>
-              )}
+              {roundResult.choice === "stop"
+                ? (
+                  <>
+                    <CircleStop className="w-6 h-6 text-red-500" />
+                    <span>STOP</span>
+                  </>
+                )
+                : (
+                  <>
+                    <Dice3 className="w-6 h-6 text-blue-500" />
+                    <span>DERNIÈRE CHANCE</span>
+                  </>
+                )}
             </h3>
 
             {roundResult.choice === "last_chance" && (
               <div className="mb-6 text-center">
                 <p className="text-lg font-semibold">
-                  {roundResult.roundEnderWon ? (
-                    <span className="text-green-600 flex items-center justify-center gap-2">
-                      <CheckCircle2 className="w-5 h-5" />
-                      {
-                        roundResult.playerScores.find((p) => p.wasRoundEnder)
-                          ?.name
-                      }{" "}
-                      a gagné son pari !
-                    </span>
-                  ) : (
-                    <span className="text-red-600 flex items-center justify-center gap-2">
-                      <XCircle className="w-5 h-5" />
-                      {
-                        roundResult.playerScores.find((p) => p.wasRoundEnder)
-                          ?.name
-                      }{" "}
-                      a perdu son pari !
-                    </span>
-                  )}
+                  {roundResult.roundEnderWon
+                    ? (
+                      <span className="text-green-600 flex items-center justify-center gap-2">
+                        <CheckCircle2 className="w-5 h-5" />
+                        {roundResult.playerScores.find((p) => p.wasRoundEnder)
+                          ?.name} a gagné son pari !
+                      </span>
+                    )
+                    : (
+                      <span className="text-red-600 flex items-center justify-center gap-2">
+                        <XCircle className="w-5 h-5" />
+                        {roundResult.playerScores.find((p) => p.wasRoundEnder)
+                          ?.name} a perdu son pari !
+                      </span>
+                    )}
                 </p>
               </div>
             )}
@@ -790,17 +779,19 @@ export default function GamePage() {
               {myPlayer?.name} - Score: {myPlayer?.score}
             </p>
             <p className="text-sm text-gray-500">
-              {isMyTurn ? (
-                <span className="text-green-600 font-semibold flex items-center gap-1.5">
-                  <Target className="w-4 h-4" />
-                  C'est votre tour !
-                </span>
-              ) : (
-                <span className="text-orange-600 font-semibold flex items-center gap-1.5">
-                  <Hourglass className="w-4 h-4" />
-                  Tour de {opponent?.name}
-                </span>
-              )}
+              {isMyTurn
+                ? (
+                  <span className="text-green-600 font-semibold flex items-center gap-1.5">
+                    <Target className="w-4 h-4" />
+                    C'est votre tour !
+                  </span>
+                )
+                : (
+                  <span className="text-orange-600 font-semibold flex items-center gap-1.5">
+                    <Hourglass className="w-4 h-4" />
+                    Tour de {opponent?.name}
+                  </span>
+                )}
             </p>
             <div className="mt-2 flex items-center gap-2">
               <span className="text-lg font-bold text-blue-600">
@@ -820,14 +811,16 @@ export default function GamePage() {
               disabled={!isMyTurn || !canPlayDuoNow || isActionLoading}
               variant="secondary"
             >
-              {isActionLoading ? (
-                <>
-                  <Spinner className="mr-2" />
-                  Joue...
-                </>
-              ) : (
-                `Jouer duo (${selectedCards.length}/2)`
-              )}
+              {isActionLoading
+                ? (
+                  <>
+                    <Spinner className="mr-2" />
+                    Joue...
+                  </>
+                )
+                : (
+                  `Jouer duo (${selectedCards.length}/2)`
+                )}
             </Button>
             <Button
               onClick={() => setShowEndRoundModal(true)}
@@ -840,14 +833,16 @@ export default function GamePage() {
               onClick={handlePassTurn}
               disabled={!isMyTurn || !canPassTurn || isActionLoading}
             >
-              {isActionLoading ? (
-                <>
-                  <Spinner className="mr-2" />
-                  Passe...
-                </>
-              ) : (
-                "Passer le tour"
-              )}
+              {isActionLoading
+                ? (
+                  <>
+                    <Spinner className="mr-2" />
+                    Passe...
+                  </>
+                )
+                : (
+                  "Passer le tour"
+                )}
             </Button>
           </div>
         </div>
@@ -901,8 +896,7 @@ export default function GamePage() {
                 type="button"
                 key={card.id}
                 onClick={() =>
-                  isMyTurn && playable && toggleCardSelection(card.id)
-                }
+                  isMyTurn && playable && toggleCardSelection(card.id)}
                 disabled={!playable}
               >
                 <PlayingCard
@@ -921,109 +915,107 @@ export default function GamePage() {
       {/* Modal choix de pile (effet crabe) */}
       {effectInProgress?.type === "crab" &&
         effectInProgress.step === "choose_pile" && (
-          <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
-              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
-                Effet Crabe : Choisissez une défausse
-              </h3>
-              <div className="flex gap-6 justify-center">
-                <button
-                  type="button"
-                  onClick={() =>
-                    socket?.emit("effect:crab-select-pile", { pileIndex: 1 })
-                  }
-                  className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={gameState?.discardPile1.length === 0}
-                >
-                  Défausse 1
-                  <div className="text-sm mt-1">
-                    ({gameState?.discardPile1.length || 0} cartes)
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    socket?.emit("effect:crab-select-pile", { pileIndex: 2 })
-                  }
-                  className="px-8 py-4 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={gameState?.discardPile2.length === 0}
-                >
-                  Défausse 2
-                  <div className="text-sm mt-1">
-                    ({gameState?.discardPile2.length || 0} cartes)
-                  </div>
-                </button>
-              </div>
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
+            <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
+              Effet Crabe : Choisissez une défausse
+            </h3>
+            <div className="flex gap-6 justify-center">
+              <button
+                type="button"
+                onClick={() =>
+                  socket?.emit("effect:crab-select-pile", { pileIndex: 1 })}
+                className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={gameState?.discardPile1.length === 0}
+              >
+                Défausse 1
+                <div className="text-sm mt-1">
+                  ({gameState?.discardPile1.length || 0} cartes)
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  socket?.emit("effect:crab-select-pile", { pileIndex: 2 })}
+                className="px-8 py-4 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={gameState?.discardPile2.length === 0}
+              >
+                Défausse 2
+                <div className="text-sm mt-1">
+                  ({gameState?.discardPile2.length || 0} cartes)
+                </div>
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
       {/* Modal sélection de carte (effet crabe) */}
       {effectInProgress?.type === "crab" &&
         effectInProgress.step === "choose_card" && (
-          <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-6xl w-full overflow-y-auto max-h-[90vh]">
-              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
-                Choisissez une carte à récupérer
-              </h3>
-              <div className="flex flex-wrap gap-4 justify-center">
-                {crabPileCards.map((card) => (
-                  <button
-                    key={card.id}
-                    type="button"
-                    onClick={() => {
-                      if (effectInProgress.pileIndex) {
-                        socket?.emit("effect:crab-select-card", {
-                          cardId: card.id,
-                          pileIndex: effectInProgress.pileIndex,
-                        });
-                      }
-                    }}
-                    className="transition-transform hover:scale-105"
-                  >
-                    <PlayingCard
-                      card={card}
-                      isFlipped={false}
-                      selectable={true}
-                      size="medium"
-                    />
-                  </button>
-                ))}
-              </div>
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl max-w-6xl w-full overflow-y-auto max-h-[90vh]">
+            <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
+              Choisissez une carte à récupérer
+            </h3>
+            <div className="flex flex-wrap gap-4 justify-center">
+              {crabPileCards.map((card) => (
+                <button
+                  key={card.id}
+                  type="button"
+                  onClick={() => {
+                    if (effectInProgress.pileIndex) {
+                      socket?.emit("effect:crab-select-card", {
+                        cardId: card.id,
+                        pileIndex: effectInProgress.pileIndex,
+                      });
+                    }
+                  }}
+                  className="transition-transform hover:scale-105"
+                >
+                  <PlayingCard
+                    card={card}
+                    isFlipped={false}
+                    selectable={true}
+                    size="medium"
+                  />
+                </button>
+              ))}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
       {/* Modal sélection de cible (effet requin/nageur) */}
       {effectInProgress?.type === "shark_swimmer" &&
         effectInProgress.step === "choose_target" && (
-          <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
-              <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
-                Effet Requin/Nageur : Choisissez un adversaire
-              </h3>
-              <div className="flex flex-col gap-4">
-                {possibleTargets.map((target) => (
-                  <button
-                    key={target.userId}
-                    type="button"
-                    onClick={() => {
-                      socket?.emit("effect:shark-swimmer-select-target", {
-                        targetPlayerId: target.userId,
-                      });
-                    }}
-                    className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
-                  >
-                    {target.name}
-                    <div className="text-sm mt-1">
-                      ({target.handCount} cartes)
-                    </div>
-                  </button>
-                ))}
-              </div>
+        <div className="fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl">
+            <h3 className="text-lg font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">
+              Effet Requin/Nageur : Choisissez un adversaire
+            </h3>
+            <div className="flex flex-col gap-4">
+              {possibleTargets.map((target) => (
+                <button
+                  key={target.userId}
+                  type="button"
+                  onClick={() => {
+                    socket?.emit("effect:shark-swimmer-select-target", {
+                      targetPlayerId: target.userId,
+                    });
+                  }}
+                  className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+                >
+                  {target.name}
+                  <div className="text-sm mt-1">
+                    ({target.handCount} cartes)
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
       <Toaster position="top-center" richColors />
     </div>
