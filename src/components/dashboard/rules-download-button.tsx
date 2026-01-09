@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 export function RulesDownloadButton() {
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "https://cdn.1j1ju.com/medias/fb/b7/b4-sea-salt-paper-regle.pdf";
+    link.href =
+      "https://cdn.1j1ju.com/medias/fb/b7/b4-sea-salt-paper-regle.pdf";
     link.download = "Regles_Sea_Salt_Paper.pdf";
     link.target = "_blank";
     link.rel = "noopener noreferrer";

@@ -110,7 +110,6 @@ class StateManager {
   }
 
   private async initializeGameState(room: Room): Promise<GameState> {
-    // biome-ignore lint/style/noVar: dynamic import workaround
     var { initializeGame } = require("./game-engine");
     const playerNamesMap = new Map<PlayerId, string>();
     for (const playerId of room.players) {

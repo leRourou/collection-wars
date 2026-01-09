@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth/auth";
 import "./globals.css";
 import { LayoutDashboardIcon } from "lucide-react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -13,7 +14,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import LoginButton from "./_components/login-button";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

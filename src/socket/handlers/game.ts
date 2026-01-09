@@ -1,16 +1,16 @@
-import * as engine from "@/lib/game/game-engine";
 import {
-  applySharkSwimmerEffect,
   applyCrabEffect,
   applyFishEffect,
+  applySharkSwimmerEffect,
   getDuoEffectType,
 } from "@/lib/game/duo-effects";
+import * as engine from "@/lib/game/game-engine";
 import { calculateRoundScores } from "@/lib/game/round-scoring";
 import { hasWinningCondition } from "@/lib/game/scoring";
 import { stateManager } from "@/lib/game/state-manager";
 import { prisma } from "@/lib/prisma";
-import { EndRoundChoice, RoundPhase } from "@/types/game";
 import type { GameEndReason, PlayerId } from "@/types/game";
+import { EndRoundChoice, RoundPhase } from "@/types/game";
 import type { TypedServer, TypedSocket } from "../server";
 
 export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
@@ -182,7 +182,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
       }
 
       // Play the duo (move cards to playedCards)
-      let newState = engine.playDuo(state, cardIds[0], cardIds[1]);
+      const newState = engine.playDuo(state, cardIds[0], cardIds[1]);
 
       // Detect effect type
       const effectType = getDuoEffectType(card1, card2);

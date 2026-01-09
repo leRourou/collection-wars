@@ -49,7 +49,10 @@ export function PlayerStats() {
           ) : (
             <div className="grid grid-cols-3 gap-6">
               <StatItem value={stats?.totalPoints ?? 0} label="Points totaux" />
-              <StatItem value={stats?.gamesPlayed ?? 0} label="Parties jouées" />
+              <StatItem
+                value={stats?.gamesPlayed ?? 0}
+                label="Parties jouées"
+              />
               <StatItem value={`${stats?.winRate ?? 0}%`} label="Victoires" />
             </div>
           )}

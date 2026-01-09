@@ -1,7 +1,7 @@
 import * as engine from "@/lib/game/game-engine";
 import { stateManager } from "@/lib/game/state-manager";
 import { prisma } from "@/lib/prisma";
-import type { GameEndReason, PlayerId } from "@/types/game";
+import type { PlayerId } from "@/types/game";
 import { RoundPhase } from "@/types/game";
 import type { TypedServer, TypedSocket } from "../server";
 

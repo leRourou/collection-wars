@@ -1,3 +1,4 @@
+import type { RoundResult } from "@/lib/game/round-scoring";
 import type { GameCard } from "./game-card";
 
 export type PlayerId = string;
@@ -93,7 +94,7 @@ export interface ServerToClientEvents {
   "round:ended": (data: {
     scores: Record<PlayerId, number>;
     gameState: GameState;
-    roundResult?: any;
+    roundResult?: RoundResult;
   }) => void;
   "round:continue-requested": () => void;
   "game:ended": (data: {
@@ -114,7 +115,10 @@ export interface ServerToClientEvents {
       handCount: number;
     }>;
   }) => void;
-  "effect:executed": (data: { effectType: string; metadata: any }) => void;
+  "effect:executed": (data: {
+    effectType: string;
+    metadata: Record<string, unknown>;
+  }) => void;
   "effect:failed": (data: { effectType: string; reason: string }) => void;
   "duo:played": (data: {
     playerName: string;

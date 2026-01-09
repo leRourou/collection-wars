@@ -51,7 +51,10 @@ export default function GamePage() {
   const [roundResult, setRoundResult] = useState<RoundResult | null>(null);
   const [showRoundResultModal, setShowRoundResultModal] = useState(false);
   const [showFinalSummary, setShowFinalSummary] = useState(false);
-  const [finalGameData, setFinalGameData] = useState<any>(null);
+  const [finalGameData, setFinalGameData] = useState<{
+    winnerId: string;
+    finalScores: Record<string, number>;
+  } | null>(null);
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
 
   // Duo effect state
@@ -547,9 +550,8 @@ export default function GamePage() {
                     <span className="text-green-600 flex items-center justify-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />
                       {
-                        roundResult.playerScores.find(
-                          (p: any) => p.wasRoundEnder,
-                        )?.name
+                        roundResult.playerScores.find((p) => p.wasRoundEnder)
+                          ?.name
                       }{" "}
                       a gagné son pari !
                     </span>
@@ -557,9 +559,8 @@ export default function GamePage() {
                     <span className="text-red-600 flex items-center justify-center gap-2">
                       <XCircle className="w-5 h-5" />
                       {
-                        roundResult.playerScores.find(
-                          (p: any) => p.wasRoundEnder,
-                        )?.name
+                        roundResult.playerScores.find((p) => p.wasRoundEnder)
+                          ?.name
                       }{" "}
                       a perdu son pari !
                     </span>
@@ -569,7 +570,7 @@ export default function GamePage() {
             )}
 
             <div className="space-y-4">
-              {roundResult.playerScores.map((playerScore: any) => (
+              {roundResult.playerScores.map((playerScore) => (
                 <div
                   key={playerScore.userId}
                   className={`p-4 rounded-lg border-2 ${

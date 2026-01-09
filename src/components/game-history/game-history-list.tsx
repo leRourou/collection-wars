@@ -50,6 +50,7 @@ export function GameHistoryList() {
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fetchGameHistory should only run once on mount
   useEffect(() => {
     fetchGameHistory(1);
   }, []);

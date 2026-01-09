@@ -93,7 +93,9 @@ export function drawFromDeck(state: GameState): {
   }
 
   const newDeck = [...state.deck];
+  // biome-ignore lint/style/noNonNullAssertion: canDrawFromDeck ensures deck has at least 2 cards
   const card1 = newDeck.pop()!;
+  // biome-ignore lint/style/noNonNullAssertion: canDrawFromDeck ensures deck has at least 2 cards
   const card2 = newDeck.pop()!;
   const drawnCards: [GameCard, GameCard] = [card1, card2];
 
@@ -194,7 +196,9 @@ export function playDuo(
   const currentPlayerIndex = state.currentPlayerIndex;
   const currentPlayer = state.players[currentPlayerIndex];
 
+  // biome-ignore lint/style/noNonNullAssertion: cards are validated before this function is called
   const card1 = currentPlayer.hand.find((c) => c.id === card1Id)!;
+  // biome-ignore lint/style/noNonNullAssertion: cards are validated before this function is called
   const card2 = currentPlayer.hand.find((c) => c.id === card2Id)!;
 
   const newPlayers = state.players.map((player, idx) => {

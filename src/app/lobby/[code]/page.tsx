@@ -95,59 +95,60 @@ export default function LobbyPage() {
       <FloatingCardsBackground />
       <div className="flex flex-col items-center justify-center min-h-screen p-8 relative z-10">
         <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle>Salle: {roomCode}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">
-                Joueurs ({currentRoom.players.length}/{currentRoom.maxPlayers})
-              </h3>
-              <ul className="space-y-2">
-                {currentRoom.players.map((playerId) => {
-                  const playerName =
-                    currentRoom.playerNames?.[playerId] || "Joueur";
-                  const initials = playerName.slice(0, 2).toUpperCase();
+          <CardHeader>
+            <CardTitle>Salle: {roomCode}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold mb-2">
+                  Joueurs ({currentRoom.players.length}/{currentRoom.maxPlayers}
+                  )
+                </h3>
+                <ul className="space-y-2">
+                  {currentRoom.players.map((playerId) => {
+                    const playerName =
+                      currentRoom.playerNames?.[playerId] || "Joueur";
+                    const initials = playerName.slice(0, 2).toUpperCase();
 
-                  return (
-                    <li key={playerId} className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
-                        {initials}
-                      </div>
-                      <span>
-                        {playerName}
-                        {playerId === currentRoom.hostId && (
-                          <span className="text-xs text-gray-500 ml-2">
-                            (Hôte)
-                          </span>
-                        )}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
+                    return (
+                      <li key={playerId} className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
+                          {initials}
+                        </div>
+                        <span>
+                          {playerName}
+                          {playerId === currentRoom.hostId && (
+                            <span className="text-xs text-gray-500 ml-2">
+                              (Hôte)
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {isHost && (
+                <Button
+                  onClick={handleStartGame}
+                  disabled={currentRoom.players.length < 2}
+                  className="w-full"
+                >
+                  Démarrer la partie
+                </Button>
+              )}
+
+              {!isHost && (
+                <p className="text-center text-gray-500">
+                  En attente de l'hôte...
+                </p>
+              )}
             </div>
-
-            {isHost && (
-              <Button
-                onClick={handleStartGame}
-                disabled={currentRoom.players.length < 2}
-                className="w-full"
-              >
-                Démarrer la partie
-              </Button>
-            )}
-
-            {!isHost && (
-              <p className="text-center text-gray-500">
-                En attente de l'hôte...
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }

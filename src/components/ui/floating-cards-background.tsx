@@ -18,22 +18,67 @@ interface FloatingCard {
 }
 
 const CARD_IMAGES = [
-  "boat_1", "boat_2", "boat_3", "boat_4", "boat_5", "boat_6", "boat_7", "boat_8",
-  "crab_1", "crab_2", "crab_3", "crab_4", "crab_5", "crab_6", "crab_7", "crab_8", "crab_9",
-  "fish_1", "fish_2", "fish_3", "fish_4", "fish_5", "fish_6", "fish_7",
-  "swimmer_1", "swimmer_2", "swimmer_3", "swimmer_4", "swimmer_5",
-  "shark_1", "shark_2", "shark_3", "shark_4", "shark_5",
-  "shell_1", "shell_2", "shell_3", "shell_4", "shell_5", "shell_6",
-  "octopus_1", "octopus_2", "octopus_3", "octopus_4", "octopus_5",
-  "pinguin_1", "pinguin_2", "pinguin_3",
-  "marine_1", "marine_2",
+  "boat_1",
+  "boat_2",
+  "boat_3",
+  "boat_4",
+  "boat_5",
+  "boat_6",
+  "boat_7",
+  "boat_8",
+  "crab_1",
+  "crab_2",
+  "crab_3",
+  "crab_4",
+  "crab_5",
+  "crab_6",
+  "crab_7",
+  "crab_8",
+  "crab_9",
+  "fish_1",
+  "fish_2",
+  "fish_3",
+  "fish_4",
+  "fish_5",
+  "fish_6",
+  "fish_7",
+  "swimmer_1",
+  "swimmer_2",
+  "swimmer_3",
+  "swimmer_4",
+  "swimmer_5",
+  "shark_1",
+  "shark_2",
+  "shark_3",
+  "shark_4",
+  "shark_5",
+  "shell_1",
+  "shell_2",
+  "shell_3",
+  "shell_4",
+  "shell_5",
+  "shell_6",
+  "octopus_1",
+  "octopus_2",
+  "octopus_3",
+  "octopus_4",
+  "octopus_5",
+  "pinguin_1",
+  "pinguin_2",
+  "pinguin_3",
+  "marine_1",
+  "marine_2",
   "sirene",
-  "boat_imp", "fish_imp", "pinguin_imp", "marine_imp",
+  "boat_imp",
+  "fish_imp",
+  "pinguin_imp",
+  "marine_imp",
 ];
 
 const generateFloatingCards = (count: number): FloatingCard[] => {
   return Array.from({ length: count }, (_, i) => {
-    const randomCard = CARD_IMAGES[Math.floor(Math.random() * CARD_IMAGES.length)];
+    const randomCard =
+      CARD_IMAGES[Math.floor(Math.random() * CARD_IMAGES.length)];
 
     return {
       id: i,
@@ -51,7 +96,11 @@ const generateFloatingCards = (count: number): FloatingCard[] => {
   });
 };
 
-export function FloatingCardsBackground({ cardCount = 15 }: { cardCount?: number }) {
+export function FloatingCardsBackground({
+  cardCount = 15,
+}: {
+  cardCount?: number;
+}) {
   const [cards, setCards] = useState<FloatingCard[]>([]);
   const [mounted, setMounted] = useState(false);
 
@@ -65,7 +114,9 @@ export function FloatingCardsBackground({ cardCount = 15 }: { cardCount?: number
   return (
     <>
       <style>{`
-        ${cards.map((card) => `
+        ${cards
+          .map(
+            (card) => `
           @keyframes float-${card.id} {
             0%, 100% {
               transform: translate(0, 0) rotate(${card.rotation}deg) scale(${card.scale});
@@ -80,7 +131,9 @@ export function FloatingCardsBackground({ cardCount = 15 }: { cardCount?: number
               transform: translate(${card.translateX * 0.5}px, ${card.translateY * -0.3}px) rotate(${card.rotation + 270}deg) scale(${card.scale * 1.02});
             }
           }
-        `).join('\n')}
+        `,
+          )
+          .join("\n")}
       `}</style>
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {cards.map((card) => (

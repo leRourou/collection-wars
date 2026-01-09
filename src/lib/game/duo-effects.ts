@@ -87,6 +87,7 @@ export function applyFishEffect(state: GameState): DuoEffectResult {
   }
 
   const newDeck = [...state.deck];
+  // biome-ignore lint/style/noNonNullAssertion: deck length is checked above
   const drawnCard = newDeck.pop()!;
 
   const currentPlayerIndex = state.currentPlayerIndex;

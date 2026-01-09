@@ -1,10 +1,10 @@
 import { Calendar, Clock, Minus, Skull, Trophy, User } from "lucide-react";
-import type { GameHistoryItem as GameHistoryItemType } from "@/types/game-history";
 import {
   formatDuration,
   formatRelativeDate,
   translateEndReason,
 } from "@/lib/utils";
+import type { GameHistoryItem as GameHistoryItemType } from "@/types/game-history";
 
 interface GameHistoryItemProps {
   game: GameHistoryItemType;

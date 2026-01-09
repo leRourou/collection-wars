@@ -1,4 +1,4 @@
-import type { EndRoundChoice, GameState, PlayerState } from "@/types/game";
+import type { EndRoundChoice, GameState } from "@/types/game";
 import { calculateColorBonus, calculateScore } from "./scoring";
 
 export interface PlayerRoundScore {
