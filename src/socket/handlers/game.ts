@@ -221,7 +221,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
             });
             io.to(socket.id).emit("effect:executed", {
               effectType: "fish",
-              metadata: result.metadata,
+              metadata: result.metadata ?? {},
             });
           } else {
             const finalState = engine.passTurn(newState);
@@ -418,7 +418,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
         });
         io.to(socket.id).emit("effect:executed", {
           effectType: "crab",
-          metadata: result.metadata,
+          metadata: result.metadata ?? {},
         });
       } else {
         socket.emit("effect:failed", {
@@ -466,7 +466,7 @@ export function registerGameHandlers(io: TypedServer, socket: TypedSocket) {
         });
         io.to(socket.id).emit("effect:executed", {
           effectType: "shark_swimmer",
-          metadata: result.metadata,
+          metadata: result.metadata ?? {},
         });
       } else {
         socket.emit("effect:failed", {
